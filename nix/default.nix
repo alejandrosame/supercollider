@@ -59,6 +59,12 @@ in {
     # I turned the following flags:
     # cmake -DNATIVE=ON ..
     # cmake -DCMAKE_INSTALL_PREFIX=./install ..
+
+    # Run it with:
+    # PATH="$PROJECT_PATH/build/install/bin:$PATH" build/install/bin/scide
+
+    # Filter coredumps with
+    # journalctl --catalog --pager-end --identifier=systemd-coredump
     shellHook = ''
       echo -e "XDG_CONFIG_HOME = $XDG_CONFIG_HOME"
       echo -e "XDG_CACHE_HOME = $XDG_CACHE_HOME"
