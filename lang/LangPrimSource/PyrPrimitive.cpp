@@ -36,6 +36,7 @@
 #include "PyrArchiverT.h"
 #include "PyrDeepCopier.h"
 #include "PyrDeepFreezer.h"
+#include "PyrWebSocketPrim.hpp"
 #include "InitAlloc.h"
 #include "SC_AudioDevicePrim.hpp"
 #include "SC_LanguageConfig.hpp"
@@ -3934,6 +3935,8 @@ void initPrimitives() {
 #endif
 
     initSCDocPrimitives();
+
+    wsclang::initialize();
 
     s_recvmsg = getsym("receiveMsg");
     post("\tFound %d primitives.\n", nextPrimitiveIndex());
