@@ -2,6 +2,19 @@
   sources ? import ./npins,
   pkgs ? (import sources.nixpkgs { config = { }; overlays = []; })
 }: let
+
+  pkgs-avahi-0_7 = import (builtins.fetchTarball {
+    url = "https://github.com/NixOS/nixpkgs/archive/7cc52df39e93d427960646a1797362048fa46011.tar.gz";
+  }) {};
+
+  avahi-0_7 = pkgs-avahi-0_7.avahi;
+
+  pkgs-avahi-0_6_32 = import (builtins.fetchTarball {
+    url = "https://github.com/NixOS/nixpkgs/archive/9748e9ad86159f62cc857a5c72bc78f434fd2198.tar.gz";
+  }) {};
+
+  avahi-0_6_32 = pkgs-avahi-0_6_32.avahi;
+
 in {
   shell = let
       XDG_CACHE_HOME = toString ./.. + "/.cache";
@@ -26,7 +39,9 @@ in {
   #   - https://discourse.nixos.org/t/running-locally-built-qt-apps/29984
   in pkgs.mkShell {
      nativeBuildInputs = with pkgs; [
-      alsa-lib avahi cmake fftwSinglePrec gcc libsndfile libjack2 pkg-config
+      alsa-lib
+      avahi-0_6_32 # avahi-0_7 # avahi 
+      cmake fftwSinglePrec gcc libsndfile libjack2 pkg-config
       xorg.libXt
       emacs
       # NOTE(alejandrosame) qt5 deps: we can also make the environment lighter
@@ -48,7 +63,7 @@ in {
     # with mkDerivation.
     EXTRA_LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath (with pkgs; [
       alsa-lib
-      avahi
+      avahi-0_6_32 # avahi-0_7 # avahi
       systemd # for libudev
       xorg.libX11
     ]);
@@ -71,7 +86,11 @@ in {
       echo -e "XDG_DATA_HOME = $XDG_DATA_HOME"
       echo -e "XDG_STATE_HOME = $XDG_STATE_HOME"
 
+      export NPINS_DIRECTORY=$PWD/nix/npins
+      echo $NPINS_DIRECTORY
+
       export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$EXTRA_LD_LIBRARY_PATH
+      echo $EXTRA_LD_LIBRARY_PATH
     '';
   };
 }
