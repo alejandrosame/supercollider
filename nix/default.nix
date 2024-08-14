@@ -73,10 +73,15 @@ in {
 
     # I turned the following flags:
     # cmake -DNATIVE=ON ..
+    # Alternatively, on the 20.09 container
+    # cmake -DNATIVE=ON -DUDEV_PATH_INCLUDES=$UDEVPATHDEV/include -DUDEV_PATH_LIB=$UDEVPATH/lib ..
     # cmake -DCMAKE_INSTALL_PREFIX=./install ..
+    # Build and install
+    # make -j10
+    # make install
 
     # Run it with:
-    # PATH="$PROJECT_PATH/build/install/bin:$PATH" build/install/bin/scide
+    # PATH="/home/dev/supercollider/build/install/bin:$PATH" build/install/bin/scide
 
     # Filter coredumps with
     # journalctl --catalog --pager-end --identifier=systemd-coredump
