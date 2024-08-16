@@ -81,7 +81,7 @@ in {
     # make install
 
     # Run it with:
-    # PATH="/home/dev/supercollider/build/install/bin:$PATH" build/install/bin/scide
+    # QT_QPA_PLATFORM=wayland PATH="/home/dev/supercollider/build/install/bin:$PATH" build/install/bin/scide
 
     # Filter coredumps with
     # journalctl --catalog --pager-end --identifier=systemd-coredump

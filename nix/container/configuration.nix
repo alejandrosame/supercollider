@@ -29,6 +29,9 @@
   
   services.avahi.enable = true;
 
+  services.xserver.enable = true;
+  # services.xserver.desktopManager.gnome.enable = true;
+
   # Research how to add envfs in an older NixOS
   # Needed to be able to bind wayland socket like
   # Meanwhile import module from https://discourse.nixos.org/t/add-bin-bash-to-avoid-unnecessary-pain/5673/10
@@ -40,9 +43,11 @@
 
   environment.systemPackages =
     (with pkgs; [
+      firefox
       git
-      nano
       libudev
+      nano
+      waypipe
     ]);
 
   environment.variables = {
