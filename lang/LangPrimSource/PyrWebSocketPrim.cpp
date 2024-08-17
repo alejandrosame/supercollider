@@ -387,7 +387,11 @@ void AvahiService::client_cb(avahi_client *client, avahi_client_state state, voi
     case AVAHI_CLIENT_S_RUNNING: {
         auto group = svc->m_group;
         if(!group) {
-            group  = avahi_entry_group_new(client, group_cb, svc);
+            if (!(group = avahi_entry_group_new(client, group_cb, svc))) {
+                scpostn_av("avahi_entry_group_new() failed: %s", avahi_strerror(avahi_client_errno(client)));
+                return;
+            }
+            scpostn_av("Group created succesfully");
             svc->m_group = group;
         }        
         if (avahi_entry_group_is_empty(group)) {

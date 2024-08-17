@@ -1,21 +1,7 @@
 {
   sources ? import ./npins,
   pkgs ? (import sources.nixpkgs { config = { }; overlays = []; })
-}: let
-
-  pkgs-avahi-0_7 = import (builtins.fetchTarball {
-    url = "https://github.com/NixOS/nixpkgs/archive/7cc52df39e93d427960646a1797362048fa46011.tar.gz";
-  }) {};
-
-  avahi-0_7 = pkgs-avahi-0_7.avahi;
-
-  pkgs-avahi-0_6_32 = import (builtins.fetchTarball {
-    url = "https://github.com/NixOS/nixpkgs/archive/9748e9ad86159f62cc857a5c72bc78f434fd2198.tar.gz";
-  }) {};
-
-  avahi-0_6_32 = pkgs-avahi-0_6_32.avahi;
-
-in {
+}: {
   shell = let
       XDG_CACHE_HOME = toString ./.. + "/.cache";
       XDG_CONFIG_HOME = toString ./.. + "/.config";
@@ -40,7 +26,7 @@ in {
   in pkgs.mkShell {
      nativeBuildInputs = with pkgs; [
       alsa-lib
-      avahi-0_6_32 # avahi-0_7 # avahi 
+      avahi 
       cmake fftwSinglePrec gcc libsndfile libjack2 pkg-config
       xorg.libXt
       emacs
@@ -49,6 +35,8 @@ in {
       #   - libsForQt5.qt5.qmake
       #   - libsForQt5.qt5.qtsvg
       pkgs.qt5.full
+      systemd
+      xorg.libX11
     ];
     buildInputs = with pkgs; [
       # libsForQt5.qt5.qtserialport
@@ -63,7 +51,7 @@ in {
     # with mkDerivation.
     EXTRA_LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath (with pkgs; [
       alsa-lib
-      avahi-0_6_32 # avahi-0_7 # avahi
+      avahi
       systemd # for libudev
       xorg.libX11
     ]);
@@ -80,12 +68,18 @@ in {
     # make -j10
     # make install
 
+    # For testing:
+      # -DCMAKE_-O0
+
     # Run it with:
     # PATH="/home/dev/supercollider/build/install/bin:$PATH" build/install/bin/scide
     # QT_QPA_PLATFORM=wayland PATH="/home/dev/supercollider/build/install/bin:$PATH" build/install/bin/scide
 
     # Test in scide
     # ~some_device = OSSIA_Device.newOSCQueryServer("supersoftware", 1234, 5678)
+
+    # sudo -E coredumpctl gdb <pid>
+    # bt or bt full # to see details with backtrace
 
     # Filter coredumps with
     # journalctl --catalog --pager-end --identifier=systemd-coredump
@@ -94,9 +88,6 @@ in {
       echo -e "XDG_CACHE_HOME = $XDG_CACHE_HOME"
       echo -e "XDG_DATA_HOME = $XDG_DATA_HOME"
       echo -e "XDG_STATE_HOME = $XDG_STATE_HOME"
-
-      export NPINS_DIRECTORY=$PWD/nix/npins
-      echo $NPINS_DIRECTORY
 
       export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$EXTRA_LD_LIBRARY_PATH
       echo $EXTRA_LD_LIBRARY_PATH
