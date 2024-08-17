@@ -91,6 +91,11 @@
 
       export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$EXTRA_LD_LIBRARY_PATH
       echo $EXTRA_LD_LIBRARY_PATH
+
+      PROJECT_ROOT=$(git rev-parse --show-toplevel)
+      EXTRA_PATH=$PROJECT_ROOT/build/install/bin
+      echo -e "EXTRA_PATH = $EXTRA_PATH"
+      export PATH=$EXTRA_PATH:$PATH
     '';
   };
 }
